@@ -1,0 +1,3 @@
+ofxDatGui
+ofxKinect
+ofxOpenCv
