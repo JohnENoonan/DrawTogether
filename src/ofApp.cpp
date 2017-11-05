@@ -72,12 +72,6 @@ void ofApp::keyPressed(int key){
 		pens[index].setDrawing(false);
 		pens.push_back(Pen(camW, camH));
 		++index;
-		/*if (pen.isDrawing()) {
-			images.push_back(pen.getImage());
-		}
-		else {
-			pen.setDrawing(true);
-		}*/
 	}
 }
 

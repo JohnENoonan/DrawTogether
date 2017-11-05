@@ -18,26 +18,24 @@ class Pen {
 		// need to be overloaded, do not call no param constructor
 		Pen() : Pen(640, 480) {}
 		Pen(int w, int h);
-		void update(ofVec2f pos); // update drawin
+		void update(const ofVec2f& pos); // update drawin
 		void updateImagePos(); // update finished 
 		
 		// getters
-		ofColor getColor() { return col; }
-		float getBrushSize() { return brushSize; }
-		bool isDrawing() { return drawing; }
+		ofColor getColor() const { return col; }
+		float getBrushSize() const  { return brushSize; }
+		bool isDrawing() const { return drawing; }
 		void drawFbo();
-		MovingImg getImage();
-		ofFbo getFbo();
-		void drawImage();
+		//MovingImg getImage() const;
 		// setters
 		void setDrawing(bool b);
 
 	private:
-		void drawHelper(ofVec2f pos);
+		void drawHelper(const ofVec2f& pos) const;
+		ofVec2f mapToCanvas(const ofVec2f& old) const;
 
 		ofFbo fbo; // what is drawn to
 		ofColor col;
-		//ofPolyline currentLine;
 
 		int camW, camH; // image dimensions
 		ofVec2f prevPos, imgPos, velocity;
