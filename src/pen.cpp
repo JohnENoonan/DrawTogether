@@ -1,23 +1,22 @@
 #include "pen.h"
 
-Pen::Pen() {
-	
-}
-
+// Constructor is passed dimension of video
 Pen::Pen(int w, int h) {
 	//init fbo
 	fbo.allocate(w, h, GL_RGBA);
+	// size of kinect video
 	camW = w;
 	camH = h;
+	// settings for the fbo image
 	fbo.begin();
 	ofClear(255, 255, 255, 0);
 	ofSetBackgroundColor(ofColor(0, 0, 0, 0));
 	ofSetCircleResolution(100);
-
-	//ofSetBackgroundAuto(false);
+	ofSetBackgroundAuto(false);
 	fbo.end();
 	drawing = true;
 	brushSize = 5;
+	// init to be somewhere far from canvas
 	prevPos = ofVec2f(-100, -100);
 	velocity = ofVec2f(ofRandom(-1 * MAX_VEL, MAX_VEL), ofRandom(-1 * MAX_VEL, MAX_VEL));
 	imgPos = ofVec2f(0,0);
@@ -28,8 +27,11 @@ Pen::Pen(int w, int h) {
 void Pen::update(ofVec2f pos) {
 	// adjust pos so it is not mirror image
 	pos = ofVec2f(camW - pos.x, pos.y);
+	// distance from previously drawn point
 	float dist = ofDist(pos.x, pos.y, prevPos.x, prevPos.y);
+	// if the points are far enough away from eachother that they are distinct
 	if (dist > MIN_DIST) {
+		// if the light was turned of to make a new line
 		if (dist < 8 * MIN_DIST) {
 			int C = (int)std::ceil(10*dist*((brushSize)) );
 			fbo.begin();
@@ -57,7 +59,7 @@ void Pen::update(ofVec2f pos) {
 }
 
 void Pen::updateImagePos() {
-	imgPos = imgPos + velocity;
+	imgPos += velocity;
 }
 
 void Pen::setDrawing(bool b) {
@@ -116,12 +118,16 @@ ofFbo Pen::getFbo() {
 	return fbo;
 }
 
+// draw this FBO to main canvas
 void Pen::drawFbo() {
+	// if this is being drawn to, draw at origin
 	if (drawing) {
 		fbo.draw(0,0);
 	}
 	else {
+		// otherwise draw at position specified
 		fbo.draw(imgPos);
+		// bounce ofscreen if image is moving too far from canvas
 		if (imgPos.x > 2*camW || imgPos.x < -camW) {
 			velocity = ofVec2f(velocity.x*-1, velocity.y);
 		}

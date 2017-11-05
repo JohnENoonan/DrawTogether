@@ -1,5 +1,5 @@
 #include "ofApp.h"
-#define ANGLE 0
+
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -7,7 +7,7 @@ void ofApp::setup(){
 	kinect.setRegistration(true);
 	kinect.init();
 	kinect.open();
-	kinect.setCameraTiltAngle(ANGLE);
+	kinect.setCameraTiltAngle(-5);
 	camW = kinect.getWidth();
 	camH = kinect.getHeight();
 	pens.push_back(Pen(camW, camH));
@@ -19,12 +19,15 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 	kinect.update();
-	
+	//update positions of already drawn images
 	for (int i = 0; i < index; ++i) {
 		pens[i].updateImagePos();
 	}
+	// get position of light
 	ofVec2f brightest = getBrightest();
+	// if a brightest point is found and the current FBO is being drawn to
 	if (brightest.x != -1 && pens[index].isDrawing()) {
+		// draw position to canvas
 		pens[index].update(brightest);
 	}
 	
@@ -32,10 +35,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	//kinect.draw(0,0);	
-	/*pen.drawFbo();*/
-	ofDrawBitmapString(camW, 600, 200);
-	ofDrawBitmapString(camH, 700, 200);
+	// draw all images, including one being drawn
 	for (int i = 0; i < pens.size(); ++i) {
 		pens[i].drawFbo();
 	}
@@ -65,6 +65,7 @@ ofVec2f ofApp::getBrightest() {
 }
 
 //--------------------------------------------------------------
+// if the current drawing is finished create a new one to be drawn to
 void ofApp::keyPressed(int key){
 	if (key == OF_KEY_RETURN) {
 		// the drawing is now finished, get image

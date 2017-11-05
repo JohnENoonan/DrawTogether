@@ -15,10 +15,11 @@
 
 class Pen {
 	public:
-		Pen();
+		// need to be overloaded, do not call no param constructor
+		Pen() : Pen(640, 480) {}
 		Pen(int w, int h);
-		void update(ofVec2f pos);
-		void updateImagePos();
+		void update(ofVec2f pos); // update drawin
+		void updateImagePos(); // update finished 
 		
 		// getters
 		ofColor getColor() { return col; }
@@ -32,15 +33,14 @@ class Pen {
 		void setDrawing(bool b);
 
 	private:
-		ofFbo fbo;
+		ofFbo fbo; // what is drawn to
 		ofColor col;
 
-		int camW, camH;
+		int camW, camH; // image dimensions
 		ofVec2f prevPos, imgPos, velocity;
 
 		float brushSize;
-		bool drawing;
-
+		bool drawing; // flag
 };
 
 #endif
