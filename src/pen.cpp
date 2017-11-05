@@ -12,7 +12,6 @@ Pen::Pen(int w, int h) {
 	ofClear(255, 255, 255, 0);
 	ofSetBackgroundColor(ofColor(0, 0, 0, 0));
 	ofSetCircleResolution(100);
-	ofSetBackgroundAuto(false);
 	fbo.end();
 	drawing = true;
 	brushSize = 5;
@@ -31,22 +30,13 @@ void Pen::update(ofVec2f pos) {
 	float dist = ofDist(pos.x, pos.y, prevPos.x, prevPos.y);
 	// if the points are far enough away from eachother that they are distinct
 	if (dist > MIN_DIST) {
-		// if the light was turned of to make a new line
+		// continue the line with the new point
 		if (dist < 8 * MIN_DIST) {
-			int C = (int)std::ceil(10*dist*((brushSize)) );
-			fbo.begin();
-			ofSetColor(ofColor(255, 238, 219));
-			ofDrawCircle(pos, brushSize);
-			// fill in space between circles
-			float xStep = (pos.x - prevPos.x) / C;
-			float yStep = (pos.y - prevPos.y) / C;
-			for (int i = 1; i <= C; ++i) {
-				ofDrawCircle(pos.x + i*xStep, pos.y + i*yStep, brushSize);
-			}
-			fbo.end();
+			drawHelper(pos, dist);
 			// update previous drawn circle
 			prevPos = pos;
 		}
+		// if the light was turned of to make a new line
 		else {
 			fbo.begin();
 			ofSetColor(ofColor(255, 238, 219));
@@ -56,6 +46,22 @@ void Pen::update(ofVec2f pos) {
 			prevPos = pos;
 		}
 	}
+}
+
+// helper function to draw to fbo given new position and distance
+// from prevPos and pos
+void Pen::drawHelper(ofVec2f pos, float dist) {
+	int C = (int)std::ceil(10 * dist*((brushSize)));
+	fbo.begin();
+	ofSetColor(ofColor(255, 238, 219));
+	ofDrawCircle(pos, brushSize);
+	// fill in space between circles
+	float xStep = (pos.x - prevPos.x) / C;
+	float yStep = (pos.y - prevPos.y) / C;
+	for (int i = 1; i <= C; ++i) {
+		ofDrawCircle(pos.x + i*xStep, pos.y + i*yStep, brushSize);
+	}
+	fbo.end();
 }
 
 void Pen::updateImagePos() {
