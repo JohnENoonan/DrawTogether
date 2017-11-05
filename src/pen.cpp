@@ -32,7 +32,7 @@ void Pen::update(ofVec2f pos) {
 	if (dist > MIN_DIST) {
 		// continue the line with the new point
 		if (dist < 8 * MIN_DIST) {
-			drawHelper(pos, dist);
+			drawHelper(pos);
 			// update previous drawn circle
 			prevPos = pos;
 		}
@@ -48,18 +48,27 @@ void Pen::update(ofVec2f pos) {
 	}
 }
 
-// helper function to draw to fbo given new position and distance
-// from prevPos and pos
-void Pen::drawHelper(ofVec2f pos, float dist) {
-	int C = (int)std::ceil(10 * dist*((brushSize)));
+// helper function to draw to fbo given new position
+// the drawing uses a Catmull-Rom spline and draws circles ontop of it to 
+// simulate width
+void Pen::drawHelper(ofVec2f pos) {
+	float x = ofMap(pos.x, 0, camW, 0, 1280);
+	float px = ofMap(prevPos.x, 0, camW, 0, 1280);
+	float y = ofMap(pos.y, 0, camH, 0, 720);
+	float py = ofMap(prevPos.y, 0, camH, 0, 720);
+	ofVec2f p = ofVec2f(x, y);
+	ofVec2f pp = ofVec2f(px, py);
 	fbo.begin();
-	ofSetColor(ofColor(255, 238, 219));
-	ofDrawCircle(pos, brushSize);
-	// fill in space between circles
-	float xStep = (pos.x - prevPos.x) / C;
-	float yStep = (pos.y - prevPos.y) / C;
-	for (int i = 1; i <= C; ++i) {
-		ofDrawCircle(pos.x + i*xStep, pos.y + i*yStep, brushSize);
+	ofPolyline line;
+	line.curveTo(pp); // handle
+	line.curveTo(pp);
+	line.curveTo(p);
+	line.curveTo(p); // handle
+	float perim = line.getPerimeter();
+	// draw circles on line
+	for (int p = 0; p < ((int)perim); ++p) {
+		ofVec3f point = line.getPointAtPercent(p / perim);
+		ofDrawCircle(point, brushSize);
 	}
 	fbo.end();
 }

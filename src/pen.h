@@ -33,10 +33,11 @@ class Pen {
 		void setDrawing(bool b);
 
 	private:
-		void drawHelper(ofVec2f pos, float dist);
+		void drawHelper(ofVec2f pos);
 
 		ofFbo fbo; // what is drawn to
 		ofColor col;
+		//ofPolyline currentLine;
 
 		int camW, camH; // image dimensions
 		ofVec2f prevPos, imgPos, velocity;
