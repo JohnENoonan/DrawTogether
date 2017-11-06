@@ -18,7 +18,7 @@ class Pen {
 		// need to be overloaded, do not call no param constructor
 		Pen() : Pen(640, 480) {}
 		Pen(int w, int h);
-		void update(const ofVec2f& pos); // update drawin
+		void update(const ofVec2f& pos, bool continueLine); // update drawin
 		void updateImagePos(); // update finished 
 		
 		// getters

@@ -23,7 +23,7 @@ Pen::Pen(int w, int h) {
 
 // called when this is drawing. Adds the new position to the drawing if 
 // past threshold
-void Pen::update(const ofVec2f& pos) {
+void Pen::update(const ofVec2f& pos, bool continueLine) {
 	// adjust pos so it is not mirror image
 	ofVec2f currPos = ofVec2f(camW - pos.x, pos.y);
 	// distance from previously drawn point
@@ -31,11 +31,11 @@ void Pen::update(const ofVec2f& pos) {
 	// if the points are far enough away from eachother that they are distinct
 	if (dist > MIN_DIST) {
 		// continue the line with the new point
-		if (dist < 3 * MIN_DIST) {
+		if (continueLine) {
+			// if this is the original point in a line
 			drawHelper(currPos);
 			// update previous drawn circle
 			prevPos = currPos;
-			// update timer 
 		}
 		// if the light was turned of to make a new line
 		else {

@@ -10,10 +10,12 @@ void ofApp::setup(){
 	kinect.setCameraTiltAngle(-5);
 	camW = kinect.getWidth();
 	camH = kinect.getHeight();
+	// create pen
 	pens.push_back(Pen(camW, camH));
 	//pen = Pen(camW, camH);
 	index = 0;
 	ofSetBackgroundColor(ofColor(237, 155, 64));
+	lightOn = false;
 }
 
 //--------------------------------------------------------------
@@ -27,8 +29,21 @@ void ofApp::update(){
 	ofVec2f brightest = getBrightest();
 	// if a brightest point is found and the current FBO is being drawn to
 	if (brightest.x != -1 && pens[index].isDrawing()) {
+		// if continuing the line
+		if (lightOn) {
+			pens[index].update(brightest, lightOn);
+		}
+		// otherwise the light was turned off and a new line needs to be drawn
+		else {
+			pens[index].update(brightest, lightOn);
+			lightOn = true;
+		}
 		// draw position to canvas
-		pens[index].update(brightest);
+		
+	}
+	// if a brightest point wasn't found then the light is not on
+	else {
+		lightOn = false;
 	}
 	
 }
@@ -71,6 +86,7 @@ void ofApp::keyPressed(int key){
 		// the drawing is now finished, get image
 		pens[index].setDrawing(false);
 		pens.push_back(Pen(camW, camH));
+		lightOn = false;
 		++index;
 	}
 }

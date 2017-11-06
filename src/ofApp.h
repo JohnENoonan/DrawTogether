@@ -29,8 +29,9 @@ class ofApp : public ofBaseApp{
 
 		ofxKinect kinect; // used as camera right now
 		//Pen pen; // drawing class
-		std::vector<MovingImg> images;
-		std::vector<Pen> pens;
+		//std::vector<MovingImg> images;
+		std::vector<Pen> pens; // vector of drawings, pens[index] is active
 		int camW, camH, index;
+		bool lightOn; // flag for whether the light is on or not
 				
 };
