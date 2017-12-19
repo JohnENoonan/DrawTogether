@@ -10,6 +10,10 @@ Here are two quick renders of an example of what the installation of this piece 
   <img alt="Labeled sketch" src="https://i.imgur.com/Yqi5eKt.png"/>  
 </div>
 
+<div align="center">
+  <img alt="sketch 2" src="https://i.imgur.com/wExSqJP.png"/>  
+</div>
+
 ## Notes
 This application was developed and tested on a windows system using the related libusbk drivers and therefore may not work immediatly on other machines or operating systems. 
 
