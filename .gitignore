@@ -133,4 +133,5 @@ Desktop.ini
 drawWithMe.VC.VC.opendb
 drawWithMe.VC.db
 .mailmap
+*.mb
 /apps*/
